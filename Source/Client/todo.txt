@@ -1,0 +1,1 @@
+-Add GLEW / SFML dlls in post build event
