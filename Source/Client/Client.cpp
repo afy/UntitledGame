@@ -1,11 +1,15 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 #include "glew-2.1.0/include/GL/glew.h"
 #include "SFML/Graphics.hpp"
 #include "SFML/OpenGL.hpp"
 #include "glm/glm.hpp"
 #include "glm/ext.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "FastNoiseSimd/FastNoiseSIMD/FastNoiseSIMD.h"
 
 GLuint LoadShaders(const char * vertex_file_path, const char * fragment_file_path) {
 
@@ -101,6 +105,7 @@ int main()
 	//Base setup
 	sf::RenderWindow window(sf::VideoMode(800, 600), "Untitled Game");
 	sf::Event ev;
+	sf::Clock clock;
 	sf::ContextSettings cs = window.getSettings();
 	std::cout << "using OPENGL version: " << cs.majorVersion << "." << cs.minorVersion << "\n";
 	std::cout << "using GLEW version: " << glewGetString(GLEW_VERSION) << "\n";
@@ -119,11 +124,34 @@ int main()
 	GLuint shader1 = LoadShaders("./Shaders/Test.vert", "./Shaders/Test.frag");
 
 	// VAOs and objects 
-	static const GLfloat obj1[] = {
+
+	
+	FastNoiseSIMD* myNoise = FastNoiseSIMD::NewFastNoiseSIMD();
+	float* noiseSet = myNoise->GetSimplexFractalSet(0, 0, 0, 16, 16, 16);
+	int index = 0;
+
+	static float obj1[16 * 16 * 3];
+	for (int x = 0; x < 16; x++)
+	{
+		for (int z = 0; z < 16; z++) 
+		{
+			obj1[index] = (float)x;
+			obj1[index + 1] = (float)noiseSet[index];
+			obj1[index + 2] = (float)z;
+			index += 3;
+		}
+	}
+	int vertsLength = 16 * 16 * 3;
+	
+
+	/*
+	static const float obj1[] = {
 		-1.0f, -1.0f, 0.0f,
 		1.0f, -1.0f, 0.0f,
 		0.0f,  1.0f, 0.0f,
 	};
+	int vertsLength = 3;
+	*/
 
 	GLuint vbuff;
 	glGenBuffers(1, &vbuff);
@@ -144,16 +172,35 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(shader1);
+		int viewLoc = glGetUniformLocation(shader1, "view");
+		int projLoc = glGetUniformLocation(shader1, "projection");
+		int modelLoc = glGetUniformLocation(shader1, "model");
+
+		int radius = 10.0f;
+		int time = 0; // clock.getElapsedTime().asSeconds();
+		float camX = sin(time) * radius;
+		float camZ = cos(time) * radius;
+		glm::mat4 view = glm::lookAt(glm::vec3(camX, 3.0, camZ), glm::vec3(8, 0, 8), glm::vec3(0, 1, 0));
+		glm::mat4 projection = glm::perspective(45.0f, 800.0f / 600.0f, 0.1f, 1000.0f);
+		glm::mat4 model = glm::mat4(1.0f);
+
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection[0][0]);
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, &model[0][0]);
+
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vbuff);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+		glPointSize(3);
+		glDrawArrays(GL_POINTS, 0, vertsLength);	
 		glDisableVertexAttribArray(0);
 
 		window.display();
 	}
 
 	window.close();
+
+	// FREE UP FUCKING RRESOURCES B4 MEMORY LEAKS TAKE OVER DIPSHIT
 
 	return 0;
 }

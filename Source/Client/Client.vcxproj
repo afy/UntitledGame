@@ -128,6 +128,21 @@ copy "$(ProjectDir)Shaders\Test.vert" "$(TargetDir)Shaders\" </Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD.cpp" />
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_avx2.cpp">
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_avx512.cpp">
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_internal.cpp" />
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_neon.cpp" />
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_sse2.cpp">
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_sse41.cpp">
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="todo.txt" />
@@ -135,6 +150,10 @@ copy "$(ProjectDir)Shaders\Test.vert" "$(TargetDir)Shaders\" </Command>
   <ItemGroup>
     <None Include="Shaders\Test.frag" />
     <None Include="Shaders\Test.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD.h" />
+    <ClInclude Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_internal.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

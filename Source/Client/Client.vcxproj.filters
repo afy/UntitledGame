@@ -18,6 +18,27 @@
     <ClCompile Include="Client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_avx2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_avx512.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_internal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_neon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_sse2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_sse41.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="todo.txt">
@@ -27,5 +48,13 @@
   <ItemGroup>
     <None Include="Shaders\Test.frag" />
     <None Include="Shaders\Test.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastNoiseSimd\FastNoiseSIMD\FastNoiseSIMD_internal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
