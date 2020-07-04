@@ -1,0 +1,36 @@
+NOTE: Current compiler settings for VS17 Win32 with x86 settings and support for AVX2 instruction set
+
+
+SFML
+	-Project properties 
+		-The path to the SFML headers (<sfml-install-path>/include) to C/C++ » General » Additional Include Directories
+		-The path to the SFML libraries (<sfml-install-path>/lib) to Linker » General » Additional Library Directories
+
+	-Linker >> Input >> Additional dependencies (Static)
+		- sfml-system-s.lib; sfml-graphics-s.lib; sfml-window-s.lib; sfml-audio-s.lib; sfml-network-s.lib 
+		- (debug)  sfml-system-s-d.lib; sfml-graphics-s-d.lib; sfml-window-s-d.lib; sfml-audio-s-d.lib; sfml-network-s-d.lib
+		- properties >> c/c++ >> preprocessor >> prep. definitions >> SFML_STATIC;
+
+	-Linker >> Input >> Additional dependencies (Dynamic)
+		- sfml-system.lib; sfml-graphics.lib; sfml-window.lib; sfml-audio.lib; sfml-network.lib 
+		- (debug)  sfml-system-d.lib; sfml-graphics-d.lib; sfml-window-d.lib; sfml-audio-d.lib; sfml-network-d.lib
+		- add following files to build path: SFML >> include >> SFML >> Audio.hpp, System.hpp, Window.hpp, Graphics.hpp, Network.hpp
+
+
+FastNoiseSIMD
+	-exclude / prevent compile for FastNoiseSimd >> FastNoiseSIMD >> ARM
+	-File properties >> c/c++ >> Code Generation >> Enable Enhanced Instruction Set for :
+		-FastNoiseSIMD_sse2.cpp		to /arch:SSE2  
+		-FastNoiseSIMD_sse41.cpp	to /arch:SSE2  
+		-FastNoiseSIMD_avx2.cpp		to /arch:AVX or /arch:AVX2
+		-FastNoiseSIMD_avx512.cpp	to /arch:AVX or /arch:AVX2
+		(NOTE: in vs17 dont set it as the string but select from drop down menu)
+	-For all above files disable File properties >> c/c++ >> Optimization >> Whole program optimization 
+
+
+OpenGL / GLEW
+	-Linker >> Input >> Additional Dependencies >> opengl32.lib
+	-Compile glew-2.1.0 >> build  with any method
+	-Project Properties >> c/c++ >> General >> Additional Include Libraries : glew-2.1.0 >> include >> GL
+	-Project Properties >> Linker >> General >> Additional Library Libraries : add file path for glew-2.1.0 >> lib >> glew32.lib / glew32d.lib
+	-... > Linker >> Input >> Additional dependencies >> glew32d.lib
